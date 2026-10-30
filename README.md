@@ -8,7 +8,9 @@ CaptionWild writes product descriptions, social media captions and hashtags in y
 
 Built for **Developers Wilding** (Mozilla.ai hackathon at MozFest 2026).
 
-![CaptionWild](docs/screenshot-captions.png)
+**Live demo:** https://captionwild.netlify.app
+
+![CaptionWild live: captions with per-platform cost and a model duel between Mistral Small and Qwen3](docs/screenshot-live.png)
 
 ## Why
 
@@ -23,7 +25,7 @@ Small sellers write the same kind of copy every day: a shop listing, an Instagra
 - **Cost of every caption.** Each platform tab shows the exact cost Otari reported (`usage.cost_usd`), plus model, time and tokens. The run total is shown when it finishes.
 - **Spend meter and cap.** A session meter adds up every request. Set a cap in dollars and the app stops before going over it.
 - **Hard budget from Otari.** The real limit sits on the Otari key: when its budget runs out, Otari refuses the request and the app says so clearly. The browser can't get around it.
-- **Model duel.** The same brief on two models side by side, with cost and speed, and a verdict ("A was 36× cheaper, 0.8 s faster"). One click makes the winner the writing model.
+- **Model duel.** The same brief on two models side by side, with cost and speed, and a verdict on which was cheaper and faster. One click makes the winner the writing model.
 - **Spend tags.** Every request carries tags (`app`, `platform`, `action`, `run`, `language`), so the Otari dashboard can break spend down by platform or by rewrites vs. first drafts.
 - **No invented facts, 12 languages, share buttons, history.**
 
@@ -46,6 +48,10 @@ Browser ──► /api/models ─┐                      ┌─► OpenAI
 | `Otari-Request-ID` | Returned to the client for tracing a request |
 
 The Otari key never reaches the browser. The function also clamps `max_tokens`, limits prompt size and can restrict models with an allow-list.
+
+## Models
+
+The live demo runs on open-weight models served by Otari: Mistral Small 3.2 writes, Qwen3 235B and Llama 3.3 70B are the duel opponents. A caption costs around $0.00005, so a thousand cost about five cents. `/api/health?probe=1` sends a 5-token request to the likeliest models and shows which ones answer on your Otari account.
 
 ## Setup
 

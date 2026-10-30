@@ -162,7 +162,7 @@ function parseVariants(raw) {
       // Some models also append the hashtags to the text. Move a trailing run
       // of #tags out of the text so they are not shown twice.
       let body = String(v.text || "").trim();
-      const tail = body.match(/(?:\s*#[\p{L}\p{N}_]+)+\s*$/u);
+      const tail = body.match(/(?:\s*#[\p{L}\p{N}_]+[.!,]?)+\s*$/u);
       const moved = [];
       if (tail && tail.index > 0) {
         moved.push(...tail[0].match(/#[\p{L}\p{N}_]+/gu).map((h) => h.slice(1)));
