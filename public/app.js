@@ -129,7 +129,7 @@ const SYSTEM = `You are a senior e-commerce and social media copywriter.
 You write copy that sounds human, specific and true to the product. You never invent facts (prices, materials, awards, discounts) that the user did not give you.
 Respond with JSON only, no markdown fences, in exactly this shape:
 {"variants":[{"text":"...","hashtags":["word","word"]}]}
-Hashtags are lowercase, without the # sign, no spaces. Each variant must take a clearly different angle (e.g. benefit, story, feeling, practical detail).`;
+Hashtags go ONLY in the "hashtags" array: lowercase, without the # sign, no spaces. Never put hashtags inside "text". Each variant must take a clearly different angle (e.g. benefit, story, feeling, practical detail).`;
 
 function buildPrompt(brief, platform, brand) {
   return `${brandBlock(brand)}
@@ -155,12 +155,28 @@ function parseVariants(raw) {
   const data = JSON.parse(text.slice(start, end + 1));
   const list = Array.isArray(data.variants) ? data.variants : [];
   const clean = list
-    .map((v) => ({
-      text: String(v.text || "").trim(),
-      hashtags: (Array.isArray(v.hashtags) ? v.hashtags : [])
+    .map((v) => {
+      const own = (Array.isArray(v.hashtags) ? v.hashtags : [])
         .map((h) => String(h).replace(/^#+/, "").replace(/\s+/g, "").trim())
-        .filter(Boolean),
-    }))
+        .filter(Boolean);
+      // Some models also append the hashtags to the text. Move a trailing run
+      // of #tags out of the text so they are not shown twice.
+      let body = String(v.text || "").trim();
+      const tail = body.match(/(?:\s*#[\p{L}\p{N}_]+)+\s*$/u);
+      const moved = [];
+      if (tail && tail.index > 0) {
+        moved.push(...tail[0].match(/#[\p{L}\p{N}_]+/gu).map((h) => h.slice(1)));
+        body = body.slice(0, tail.index).trim();
+      }
+      const seen = new Set();
+      const hashtags = [...own, ...moved].filter((h) => {
+        const k = h.toLowerCase();
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      });
+      return { text: body, hashtags };
+    })
     .filter((v) => v.text);
   if (!clean.length) throw new Error("The model returned an empty answer. Try again.");
   return clean;
