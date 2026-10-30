@@ -8,7 +8,7 @@ CaptionWild writes product descriptions, social media captions and hashtags in y
 
 Built for **Developers Wilding** (Mozilla.ai hackathon at MozFest 2026).
 
-**Live demo:** https://captionwild.netlify.app
+**Live demo:** https://captionwild.netlify.app · **Demo video:** https://youtu.be/bggXsf9O634
 
 ![CaptionWild live: captions with per-platform cost and a model duel between Mistral Small and Qwen3](docs/screenshot-live.png)
 
