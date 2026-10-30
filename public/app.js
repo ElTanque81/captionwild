@@ -219,7 +219,7 @@ function renderMeter() {
   bar.classList.toggle("full", pct >= 100);
   $("#meter-text").textContent = state.online
     ? `${usd(s.usd)}${cap > 0 ? ` of ${usd(cap)}` : ""} · ${s.requests} request${s.requests === 1 ? "" : "s"}${s.unpriced ? ` · ${s.unpriced} unpriced` : ""}`
-    : "Demo mode: no real requests, no cost";
+    : `Demo mode: ${state.offlineReason || "no real requests, no cost"}`;
 }
 
 function modelLabel(id) {
