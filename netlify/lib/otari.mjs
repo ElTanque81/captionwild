@@ -1,10 +1,18 @@
 // Shared helpers for the Otari proxy functions.
 // The Otari API key lives only here, in the Netlify environment, never in the browser.
 
-export const OTARI_BASE = (process.env.OTARI_BASE_URL || "https://api.otari.ai/api/v1").replace(/\/+$/, "");
+export const OTARI_BASE = ((globalThis.Netlify?.env?.get?.("OTARI_BASE_URL")) || process.env.OTARI_BASE_URL || "https://api.otari.ai/api/v1").trim().replace(/\/+$/, "");
+
+// Read from Netlify's runtime env first, then process.env; trim stray quotes/spaces
+// that easily sneak in when the key is pasted into the dashboard.
+function env(name) {
+  let v = "";
+  try { v = globalThis.Netlify?.env?.get?.(name) || ""; } catch {}
+  return (v || process.env[name] || "").trim().replace(/^["']|["']$/g, "").trim();
+}
 
 export function otariKey() {
-  return process.env.OTARI_API_KEY || "";
+  return env("OTARI_API_KEY") || env("OTARI_KEY") || env("OTARI_API_TOKEN");
 }
 
 // Optional allow-list: OTARI_MODELS="openai:gpt-4o-mini,anthropic:claude-haiku-4-5"
