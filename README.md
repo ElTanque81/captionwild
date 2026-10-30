@@ -106,6 +106,13 @@ With no key at all, the app opens in demo mode with sample copy.
 
 CaptionWild grew out of Caption Studio (my earlier Anna app). For this hackathon the AI layer was replaced with Otari, and model choice, per-request cost, spend cap, budget handling, spend tags and the model duel were added.
 
+## Feedback to Otari
+
+Issues opened on the Otari repository while building CaptionWild:
+
+- [#2728](https://github.com/mozilla-ai/otari/issues/2728): document regional API hosts for hosted keys (EU keys get 421 on api.otari.ai)
+- [#2729](https://github.com/mozilla-ai/otari/issues/2729): `GET /models` lists models that every provider refuses
+
 ## License
 
 MIT

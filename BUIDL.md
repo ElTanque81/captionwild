@@ -36,6 +36,7 @@ The Otari key stays on the server (a Netlify Function). No framework, no build s
 - GitHub: https://github.com/ElTanque81/captionwild
 - Live demo: https://captionwild.netlify.app
 - Demo video: https://youtu.be/bggXsf9O634
+- Otari issues: https://github.com/mozilla-ai/otari/issues/2728, https://github.com/mozilla-ai/otari/issues/2729
 
 ## Tech
 
