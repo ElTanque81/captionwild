@@ -2,7 +2,7 @@
 // Answer: { models: [{ id, name, inPerM, outPerM, priced, context }] }
 
 import { allowedModels, describeError, json, otari, otariKey } from "../lib/otari.mjs";
-import { preferenceRank } from "../lib/prefer.mjs";
+import { RECOMMENDED, preferenceRank } from "../lib/prefer.mjs";
 
 export default async () => {
   if (!otariKey()) return json(503, { error: { kind: "setup", message: "OTARI_API_KEY is not set on the server." } });
@@ -36,6 +36,7 @@ export default async () => {
         priced: m.pricing_source !== "none" && (inPerM != null || outPerM != null),
         context: m.context_window ?? null,
         rank: preferenceRank(m.id),
+        recommended: RECOMMENDED.includes(m.id),
       };
     })
     // Skip models no one has priced: with a budget on the key Otari refuses them.

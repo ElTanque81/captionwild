@@ -32,7 +32,7 @@ const PLATFORMS = [
 
 const LANGUAGES = ["English", "Deutsch", "Español", "Français", "Italiano", "Português", "Nederlands", "Polski", "Türkçe", "日本語", "한국어", "中文"];
 
-const KEYS = { brands: "captionwild:brands", activeBrand: "captionwild:active-brand", history: "captionwild:history", last: "captionwild:last-brief", theme: "captionwild:theme", engine: "captionwild:engine", spend: "captionwild:spend" };
+const KEYS = { brands: "captionwild:brands", activeBrand: "captionwild:active-brand", history: "captionwild:history", last: "captionwild:last-brief", theme: "captionwild:theme", engine: "captionwild:engine:v2", spend: "captionwild:spend" };
 
 /* Theme: "auto" follows the system, "light"/"dark" are fixed. */
 const THEMES = {
@@ -224,7 +224,8 @@ function renderMeter() {
 
 function modelLabel(id) {
   const m = state.models.find((x) => x.id === id);
-  return m ? m.name.replace(/^[^:]+:/, "") : String(id || "").replace(/^[^:]+:/, "");
+  const raw = m ? (m.name && m.name !== m.id && !/[:/]/.test(m.name) ? m.name : m.id) : String(id || "");
+  return raw.replace(/^[^:]+:/, "").replace(/^[^/]+\//, "");
 }
 
 /* Rough price of one caption run (≈900 input + 600 output tokens), for the picker. */
@@ -243,7 +244,17 @@ function renderEngine() {
       return;
     }
     sel.disabled = false;
-    for (const m of state.models) sel.append(new Option(`${modelLabel(m.id)} · ${priceHint(m)}`, m.id));
+    const rec = state.models.filter((m) => m.recommended);
+    const rest = state.models.filter((m) => !m.recommended);
+    const group = (label, list) => {
+      if (!list.length) return;
+      const g = document.createElement("optgroup");
+      g.label = label;
+      for (const m of list) g.append(new Option(`${modelLabel(m.id)} · ${priceHint(m)}`, m.id));
+      sel.append(g);
+    };
+    if (rec.length) { group("Recommended (tested)", rec); group("All models", rest); }
+    else for (const m of state.models) sel.append(new Option(`${modelLabel(m.id)} · ${priceHint(m)}`, m.id));
     sel.value = state.models.some((m) => m.id === value) ? value : state.models[0].id;
   };
   fill($("#model-write"), state.engine.write);
