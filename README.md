@@ -52,7 +52,7 @@ The Otari key never reaches the browser. The function also clamps `max_tokens`, 
 ### 1. Otari
 
 1. Sign in at [otari.ai](https://otari.ai) and add a provider key (or use the models Otari hosts).
-2. Create an **API key** (`tk-…`).
+2. Create an **API key** (`otk_…` on otari.ai, `tk-…` on a self-hosted Otari). EU keys work too: the app follows Otari's region redirect automatically.
 3. Recommended: give the key a **budget** (e.g. $2 per day) so the public demo can never run away.
 
 Self-hosting works too: run Otari with Docker Compose and set `OTARI_BASE_URL=http://your-host:8000/api/v1`.
@@ -64,7 +64,7 @@ Self-hosting works too: run Otari with Docker Compose and set `OTARI_BASE_URL=ht
 
 | Variable | Required | Example |
 |---|---|---|
-| `OTARI_API_KEY` | yes | `tk-…` |
+| `OTARI_API_KEY` | yes | `otk_v1_…` |
 | `OTARI_BASE_URL` | no | `https://api.otari.ai/api/v1` (default) |
 | `OTARI_MODELS` | no | `mistral:mistral-small-latest,openai:gpt-4o-mini` (allow-list) |
 

@@ -22,8 +22,13 @@ export function json(status, body, extra = {}) {
   });
 }
 
-export async function otari(path, init = {}) {
-  const res = await fetch(`${OTARI_BASE}${path}`, {
+// Otari is served from more than one region. A key minted in another region
+// (e.g. an EU key "otk_v1_eu_…" sent to api.otari.ai) is answered 421 with
+// "This API key belongs to <host>." We follow that once and remember the host.
+let regionBase = null;
+
+async function send(base, path, init) {
+  const res = await fetch(`${base}${path}`, {
     ...init,
     headers: {
       authorization: `Bearer ${otariKey()}`,
@@ -35,6 +40,20 @@ export async function otari(path, init = {}) {
   let body;
   try { body = text ? JSON.parse(text) : {}; } catch { body = { raw: text }; }
   return { res, body };
+}
+
+export async function otari(path, init = {}) {
+  const base = regionBase || OTARI_BASE;
+  let out = await send(base, path, init);
+  if (out.res.status === 421) {
+    const detail = typeof out.body?.detail === "string" ? out.body.detail : out.body?.raw || "";
+    const host = (detail.match(/belongs to ([a-z0-9.-]+\.[a-z]{2,})/i) || [])[1];
+    if (host) {
+      regionBase = `https://${host}/api/v1`;
+      out = await send(regionBase, path, init);
+    }
+  }
+  return out;
 }
 
 // Turn an Otari error body into a short, stable code + message for the UI.
