@@ -1,0 +1,13 @@
+{
+  "name": "captionwild",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Product copy and social captions on any model, with the cost of every caption. Built on Otari by Mozilla.ai.",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "mock": "node scripts/mock-otari.mjs"
+  },
+  "license": "MIT"
+}
