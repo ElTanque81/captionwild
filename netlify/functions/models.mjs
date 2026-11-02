@@ -2,7 +2,7 @@
 // Answer: { models: [{ id, name, inPerM, outPerM, priced, context }] }
 
 import { allowedModels, describeError, json, otari, otariKey } from "../lib/otari.mjs";
-import { RECOMMENDED, preferenceRank } from "../lib/prefer.mjs";
+import { RECOMMENDED, isChatCandidate, preferenceRank } from "../lib/prefer.mjs";
 
 export default async () => {
   if (!otariKey()) return json(503, { error: { kind: "setup", message: "OTARI_API_KEY is not set on the server." } });
@@ -21,7 +21,7 @@ export default async () => {
     .filter((m) => {
       const outMods = m.architecture?.output_modalities;
       if (Array.isArray(outMods) && outMods.length && !outMods.includes("text")) return false;
-      if (/embed|rerank|whisper|tts|dall-e|image|moderation/i.test(m.id)) return false;
+      if (!isChatCandidate(m.id)) return false;
       return !allow.length || allow.includes(m.id);
     })
     .map((m) => {

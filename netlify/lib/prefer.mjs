@@ -23,3 +23,12 @@ export function preferenceRank(id) {
   const i = PREFERRED.findIndex((re) => re.test(id));
   return i === -1 ? 999 : 100 + i;
 }
+
+// Models that are not chat models (embeddings, rerankers, speech, images) or that
+// Otari's maintainers confirmed as unavailable on the hosted catalog (issue #2729).
+// /models does not mark embedding models yet, so they are recognised by name.
+export const NOT_CHAT = /embed|rerank|whisper|tts|dall-e|image|moderation|\bbge-|bge-m3|gte-|\be5-|nomic-|jina-emb/i;
+export const KNOWN_UNAVAILABLE = new Set(["meta/llama-3.3-70b", "baai/bge-multilingual-gemma2"]);
+export function isChatCandidate(id) {
+  return !NOT_CHAT.test(id) && !KNOWN_UNAVAILABLE.has(id) && !/bge-multilingual-gemma2/i.test(id);
+}

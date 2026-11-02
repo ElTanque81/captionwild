@@ -1,7 +1,7 @@
 // GET /api/health — setup check. Never returns the key, only its shape,
 // plus whether Otari accepts it.
 import { OTARI_BASE, json, otari, otariKey } from "../lib/otari.mjs";
-import { preferenceRank } from "../lib/prefer.mjs";
+import { isChatCandidate, preferenceRank } from "../lib/prefer.mjs";
 
 export default async (req) => {
   const url = new URL(req.url);
@@ -27,7 +27,7 @@ export default async (req) => {
       // reports which ones actually answer.
       if (url.searchParams.has("probe")) {
         const candidates = ids
-          .filter((id) => !/embed|rerank|whisper|tts|image|moderation/i.test(id))
+          .filter(isChatCandidate)
           .sort((a, b) => preferenceRank(a) - preferenceRank(b))
           .slice(0, 8);
         report.probe = await Promise.all(candidates.map(async (model) => {
