@@ -477,7 +477,7 @@ function friendlyError(err) {
   if (kind === "auth") return `Otari refused the request: ${err.message}`;
   if (kind === "pricing") return "this model has no price in Otari yet, so budgeted traffic is refused. Pick another model";
   if (kind === "setup") return "the server has no Otari key yet";
-  if (/No model could serve|not found|provider_not_configured|No provider accepted/i.test(err?.message || "")) {
+  if (/No model could serve|not found|provider_not_configured|No provider accepted|wrong_model_type|not a chat model/i.test(`${err?.code || ""} ${err?.message || ""}`)) {
     return `${modelLabel(state.engine.write)} isn't available on this Otari account right now. Pick another writing model`;
   }
   if (err instanceof SyntaxError) return "the answer was cut off, try fewer variants";
