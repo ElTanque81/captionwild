@@ -21,7 +21,8 @@ export default async (req) => {
       report.otariUrl = res.url;
       report.modelCount = Array.isArray(body.data) ? body.data.length : null;
       if (!res.ok) report.otariAnswer = JSON.stringify(body).slice(0, 300);
-      const ids = (body.data || []).map((m) => m.id);
+      const ids = (body.data || []).filter((m) => !m.type || m.type === "chat").map((m) => m.id);
+      report.typedModels = (body.data || []).some((m) => m.type);
       if (url.searchParams.has("models")) report.models = ids;
       // ?probe=1 sends a 5-token request to the likeliest writing models and
       // reports which ones actually answer.

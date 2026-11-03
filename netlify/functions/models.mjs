@@ -21,7 +21,10 @@ export default async () => {
     .filter((m) => {
       const outMods = m.architecture?.output_modalities;
       if (Array.isArray(outMods) && outMods.length && !outMods.includes("text")) return false;
-      if (!isChatCandidate(m.id)) return false;
+      // Otari now says what kind each model is (otari#2754, fixes #2729). Use it
+      // when present; fall back to the name check for older deployments.
+      if (m.type && m.type !== "chat") return false;
+      if (!m.type && !isChatCandidate(m.id)) return false;
       return !allow.length || allow.includes(m.id);
     })
     .map((m) => {
