@@ -110,7 +110,7 @@ CaptionWild grew out of Caption Studio (my earlier Anna app). For this hackathon
 
 Issues opened on the Otari repository while building CaptionWild:
 
-- [#2728](https://github.com/mozilla-ai/otari/issues/2728): document regional API hosts for hosted keys (EU keys get 421 on api.otari.ai). The integration guides now name `https://eu.api.otari.ai/api/v1` for EU accounts.
+- [#2728](https://github.com/mozilla-ai/otari/issues/2728): document regional API hosts for hosted keys (EU keys get 421 on api.otari.ai). Fixed in Otari by [#2741](https://github.com/mozilla-ai/otari/pull/2741): the hosted docs now say API keys are tied to a region and give the EU base URL `https://eu.api.otari.ai/api/v1` next to the US one.
 - [#2729](https://github.com/mozilla-ai/otari/issues/2729): `GET /models` lists models that every provider refuses. Fixed in Otari by [#2754](https://github.com/mozilla-ai/otari/pull/2754): `/models` now carries each model's `type`, and models providers refuse are switched off. CaptionWild uses the new `type` field to show only chat models.
 
 ## License
